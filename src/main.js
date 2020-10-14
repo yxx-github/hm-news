@@ -25,6 +25,9 @@ Vue.component('hm-logo', HmLogo)
 import HmButton from './components/HmButton.vue'
 Vue.component('hm-button', HmButton)
 
+import HmPost from './components/HmPost.vue'
+Vue.component('hm-post', HmPost)
+
 import {
   Field,
   Toast,
