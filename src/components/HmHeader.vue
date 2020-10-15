@@ -4,7 +4,7 @@
     <!-- 固定定位 -->
     <div class="m">
       <div class="left" @click="$router.back()">
-        <i class="iconfont iconjiantou2"></i>
+        <i v-if="$route.path !== '/login'" class="iconfont iconjiantou2"></i>
       </div>
       <div class="center">
         <slot></slot>
