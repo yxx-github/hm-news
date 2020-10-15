@@ -65,7 +65,8 @@ const router = new VueRouter({
 //   next(false) 不允许进入
 //   next('/login') 允许进入login
 router.beforeEach((to, from, next) => {
-  if (to.path === '/user') {
+  const authPath = ['/user', '/my-follow', '/my-comment', '/mystar', '/edit']
+  if (authPath.includes(to.path)) {
 
     let token = localStorage.getItem('token')
     if (token) {

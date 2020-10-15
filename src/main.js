@@ -71,22 +71,22 @@ axios.interceptors.request.use(config => {
 })
 
 // 响应拦截器
-axios.interceptors.response.use(res => {
-  const {
-    statusCode,
-    message
-  } = res.data
-  if (statusCode === 401 && message === '用户信息验证失败') {
+// axios.interceptors.response.use(res => {
+//   const {
+//     statusCode,
+//     message
+//   } = res.data
+//   if (statusCode === 401 && message === '用户信息验证失败') {
 
-    // 1. 删除本地失效的token
-    localStorage.removeItem('token')
-    localStorage.removeItem('user_id')
+//     // 1. 删除本地失效的token
+//     localStorage.removeItem('token')
+//     localStorage.removeItem('user_id')
 
-    // 2. 跳转到 login页面
-    router.push('/login')
-  }
-  return res
-})
+//     // 2. 跳转到 login页面
+//     router.push('/login')
+//   }
+//   return res
+// })
 
 
 new Vue({
