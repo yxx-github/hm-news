@@ -11,7 +11,7 @@
       </div>
       <div class="bottom">
         <span>{{post.user.nickname}}</span>
-        <span>{{post.comments.length}} 跟帖</span>
+        <span>{{post.comments ? post.comments.length : post.comment_length}} 跟帖</span>
       </div>
     </div>
 
@@ -21,7 +21,7 @@
         <div class="title line2">{{post.title}}</div>
         <div class="bottom">
           <span>{{post.user.nickname}}</span>
-          <span>{{post.comments.length}} 跟帖</span>
+          <span>{{post.comments ? post.comments.length : post.comment_length}} 跟帖</span>
         </div>
       </div>
       <div class="right">
@@ -39,7 +39,7 @@
       </div>
       <div class="bottom">
         <span>{{post.user.nickname}}</span>
-        <span>{{post.comments.length}} 跟帖</span>
+        <span>{{post.comments ? post.comments.length : post.comment_length}} 跟帖</span>
       </div>
     </div>
   </div>
