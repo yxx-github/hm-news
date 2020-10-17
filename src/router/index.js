@@ -61,6 +61,10 @@ const router = new VueRouter({
   ]
 })
 
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 // 全局前置守卫
 // 1. to :   你要去哪里    305  路由对象
