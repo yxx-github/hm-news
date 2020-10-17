@@ -9,11 +9,17 @@
         <i class="iconfont iconsearch"></i>
         <span>搜索新闻</span>
       </div>
-      <div class="right">
+      <div class="right" @click="$router.push('/user')">
         <i class="iconfont iconwode"></i>
       </div>
     </div>
 
+    <!-- 小三角 -->
+    <van-sticky z-index="999">
+      <div class="container" @click="$router.push('/tabsedit')">
+        <i class="iconfont iconjiantou1"></i>
+      </div>
+    </van-sticky>
     <!-- tab标签栏-导航栏 -->
     <van-tabs v-model="active" sticky>
       <van-tab :title="tab.name" v-for="tab in tabList" :key="tab.id">
@@ -27,7 +33,13 @@
             :immediate-check="false"
             finished-text="没有更多了"
           >
-            <hm-post v-for="(post,index) in postList" :key="index" :post="post"></hm-post>
+            <!-- 不能直接给`我们封装的组件`注册点击等事件 使用语法糖 @click.native -->
+            <hm-post
+              @click.native="$router.push('/detail')"
+              v-for="(post,index) in postList"
+              :key="index"
+              :post="post"
+            ></hm-post>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -137,7 +149,22 @@ export default {
 <style lang="less" scoped>
 // 如果是组件, 可能正常的scoped 无法深入对组件内部的元素起效果  使用深度作用选择器 less ==>  /deep/
 /deep/ .van-tabs__nav {
+  position: relative;
   background-color: #ddd;
+  margin-right: 40px;
+}
+// 小三角
+.container {
+  position: absolute;
+  right: 0;
+  z-index: 999;
+
+  width: 40.5px;
+  height: 44px;
+  background-color: #ddd;
+  text-align: center;
+  line-height: 44px;
+  font-weight: 700;
 }
 .header {
   height: 40px;

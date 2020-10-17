@@ -40,7 +40,8 @@ import {
   List,
   Tab,
   Tabs,
-  PullRefresh
+  PullRefresh,
+  Sticky
 } from 'vant'
 Vue.use(Field)
 Vue.use(Toast)
@@ -54,6 +55,7 @@ Vue.use(List)
 Vue.use(Tab)
 Vue.use(Tabs)
 Vue.use(PullRefresh)
+Vue.use(Sticky)
 
 
 // 注册一个全局过滤器
