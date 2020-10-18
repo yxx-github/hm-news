@@ -27,9 +27,9 @@
       <video v-else :src="detail.content" controls></video>
       <!-- 点赞 -->
       <div class="bottom">
-        <div class="like">
+        <div @click="like" class="like" :class="{ active : detail.has_like }">
           <i class="iconfont icondianzan"></i>
-          <i>1</i>
+          <i>{{detail.like_length}}</i>
         </div>
       </div>
     </div>
@@ -102,6 +102,29 @@ export default {
         // 3. 重新获取
         this.getDetail()
       }
+    },
+    // 点赞
+    async like() {
+      // 判断有没有登录 如果没有登录 不可以点赞 要回到登录页登录
+      let token = localStorage.getItem('token')
+      if (!token) {
+        this.$toast('请登录！')
+        this.$router.push({
+          name: 'login',
+          params: {
+            back: true
+          }
+        })
+        return //要 return 因为如果没有登录 就不需要进行下面的请求了
+      }
+
+      let res = await this.$axios.get(`/post_like/${this.detail.id}`)
+      if (res.data.statusCode === 200) {
+        // 提示
+        this.$toast.success(res.data.message)
+        // 重新请求
+        this.getDetail()
+      }
     }
   }
 }
@@ -167,5 +190,30 @@ export default {
 video {
   width: 100%;
   margin-top: 10px;
+}
+
+// 点赞
+.bottom {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0;
+  .like {
+    width: 80px;
+    height: 30px;
+    border: 1px solid #666;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 15px;
+    i {
+      margin: 0 5px;
+      color: #666;
+    }
+  }
+  .like.active {
+    border: 1px solid #f00;
+    i {
+      color: red;
+    }
+  }
 }
 </style>
