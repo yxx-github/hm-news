@@ -35,7 +35,7 @@
           >
             <!-- 不能直接给`我们封装的组件`注册点击等事件 使用语法糖 @click.native -->
             <hm-post
-              @click.native="$router.push('/detail')"
+              @click.native="$router.push(`/detail/${post.id}`)"
               v-for="(post,index) in postList"
               :key="index"
               :post="post"

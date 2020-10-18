@@ -80,11 +80,8 @@ axios.interceptors.request.use(config => {
 
 // 响应拦截器
 axios.interceptors.response.use(res => {
-  const {
-    statusCode,
-    message
-  } = res.data
-  if (statusCode === 401 && message === '用户信息验证失败') {
+
+  if (res.data.statusCode === 401 && res.data.message === '用户信息验证失败') {
 
     // 1. 删除本地失效的token
     localStorage.removeItem('token')

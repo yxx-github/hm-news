@@ -112,8 +112,14 @@ export default {
           // 2.提示信息
           this.$toast.success(message)
 
-          // 3.跳转
-          this.$router.push('/user')
+          // 3.跳转 需要判断
+          if (this.$route.params.back) {
+            // 登录完返回 /detail ==> /login
+            this.$router.back()
+          } else {
+            // 登录去 /user 直接访问的/login => /user
+            this.$router.push('/user')
+          }
         } else {
           this.$toast.fail(message)
         }
