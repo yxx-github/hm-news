@@ -12,6 +12,7 @@ import MyComment from '../views/MyComment.vue'
 import MyStar from '../views/MyStar.vue'
 import Home from '../views/Home.vue'
 import Detail from '../views/Detail.vue'
+import TabsEdit from '../views/TabsEdit.vue'
 
 // 细节: 项目中（模块化工程中）必须要使用 Vue.use()安装一下，把路由当成插件来使用
 Vue.use(VueRouter)
@@ -61,6 +62,10 @@ const router = new VueRouter({
     {
       path: '/detail/:id',
       component: Detail
+    },
+    {
+      path: '/tabsedit',
+      component: TabsEdit
     }
 
   ]
