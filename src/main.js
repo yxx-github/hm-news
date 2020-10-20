@@ -28,6 +28,12 @@ Vue.component('hm-button', HmButton)
 import HmPost from './components/HmPost.vue'
 Vue.component('hm-post', HmPost)
 
+import HmComment from './components/HmComment.vue'
+Vue.component('hm-comment', HmComment)
+
+import HmFloor from './components/HmFloor.vue'
+Vue.component('hm-floor', HmFloor)
+
 import {
   Field,
   Toast,
@@ -41,7 +47,8 @@ import {
   Tab,
   Tabs,
   PullRefresh,
-  Sticky
+  Sticky,
+  Icon
 } from 'vant'
 Vue.use(Field)
 Vue.use(Toast)
@@ -56,7 +63,7 @@ Vue.use(Tab)
 Vue.use(Tabs)
 Vue.use(PullRefresh)
 Vue.use(Sticky)
-
+Vue.use(Icon)
 
 // 注册一个全局过滤器
 import moment from 'moment'
@@ -80,9 +87,7 @@ axios.interceptors.request.use(config => {
 
 // 响应拦截器
 axios.interceptors.response.use(res => {
-
   if (res.data.statusCode === 401 && res.data.message === '用户信息验证失败') {
-
     // 1. 删除本地失效的token
     localStorage.removeItem('token')
     localStorage.removeItem('user_id')
@@ -92,7 +97,6 @@ axios.interceptors.response.use(res => {
   }
   return res
 })
-
 
 new Vue({
   // 挂载路由
