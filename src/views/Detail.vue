@@ -16,10 +16,10 @@
 
     <!-- 内容 -->
     <div class="container">
-      <div class="title line2">相互服务器好好发挥和的哈哈哈上海能否恢复凤凰号发回方法</div>
+      <div class="title line2">{{ detail.title }}</div>
       <div class="name">
-        <span>新华网</span>
-        <span>2020-10-10</span>
+        <span>{{ detail.user.nickname }}</span>
+        <span>{{ detail.create_date | date}}</span>
       </div>
       <!-- 1.文本内容 (图片 + 文字) -->
       <div v-if="detail.type === 1" class="content" v-html="detail.content"></div>
@@ -34,6 +34,8 @@
       </div>
     </div>
 
+    <div ref="box"></div>
+
     <!-- 评论 -->
     <div class="comments">
       <hm-comment v-for="comment in commentsList" :key="comment.id" :comment="comment"></hm-comment>
@@ -47,19 +49,24 @@
           <input ref="input" @focus="handleFocus" type="text" placeholder="写跟帖">
         </div>
         <div class="center">
-          <van-icon name="chat-o" badge="9"/>
+          <van-icon name="chat-o" :badge="detail.comment_length"/>
         </div>
-        <div class="right">
-          <van-icon name="star-o"/>
+        <div class="right" @click="star">
+          <van-icon name="star-o" :class="{ active: detail.has_star }"/>
         </div>
       </div>
       <!-- textarea -->
       <div class="textarea" v-else>
         <div class="left">
-          <textarea ref="textarea" @blur="handleBlur" placeholder="请输入内容"></textarea>
+          <textarea
+            v-model="content"
+            ref="textarea"
+            @blur="handleBlur"
+            :placeholder="replyName ? '回复:' + replyName : '请输入内容'"
+          ></textarea>
         </div>
         <div class="right">
-          <div class="send">发送</div>
+          <div @touchstart="send" class="send">发送</div>
         </div>
       </div>
     </div>
@@ -70,15 +77,35 @@
 export default {
   data() {
     return {
-      detail: {}, //详情页信息
+      detail: {
+        user: {}
+      }, //详情页信息
       commentsList: [], //评论列表
-      isShow: false // 控制 textarea 显示与否
+      isShow: false, // 控制 textarea 显示与否
+      replyId: '', // 回复id
+      replyName: '', // 回复昵称
+      content: '' // 回复/评论的内容
     }
   },
   created() {
     // console.log(this.$route.params.id)
     this.getDetail()
     this.getComments()
+
+    // 注册事件
+    this.$bus.$on('reply', async (replyId, replyName) => {
+      console.log('detail:', replyId, replyName)
+
+      // 保存 传递过来的 id和 name
+      this.replyId = replyId // 用来发送
+      this.replyName = replyName // 它的作用仅仅就是为了显示在 textarea 里面
+
+      // 显示 textarea
+      this.isShow = true
+      // 聚焦
+      await this.$nextTick()
+      this.$refs.textarea && this.$refs.textarea.focus()
+    })
   },
 
   methods: {
@@ -169,16 +196,63 @@ export default {
       }
     },
     // 聚焦
-    handleFocus() {
-      // 1.textarea 显示
+    async handleFocus() {
+      // 1.textarea 显示数
       this.isShow = true
       // 2.textarea 聚焦 => textarea.focus() 需要拿到 textarea 标签（DOM操作）
       // 在vue中，我们想要拿到某个标签或者组件 ===> ref ===> vue 中的 DOM 操作
-      // this.$refs.textarea.focus()
+      // 据更新 ,更新视图是异步的 所以要用 $nextTick()
+      await this.$nextTick()
+      this.$refs.textarea.focus()
     },
     // 失焦
     handleBlur() {
-      this.isShow = false
+      this.isShow = false //不管有没有内容 textarea都要隐藏
+
+      if (!this.content) {
+        // 判断 有内容的时候不清空 没内容的时候就清空
+        // 失焦的时候,让 replyId 和 replyName 清空
+        this.replyId = ''
+        this.replyName = ''
+      }
+    },
+    // 点击发送
+    async send() {
+      console.log('发送')
+      let res = await this.$axios.post(
+        `/post_comment/${this.$route.params.id}`,
+        {
+          content: this.content,
+          parent_id: this.replyId
+        }
+      )
+
+      if (res.data.statusCode === 200) {
+        // 提示
+        this.$toast.success(res.data.message)
+        // 重新请求评论
+        this.getComments()
+        // 清空
+        this.content = ''
+        this.replyId = ''
+        this.replyName = ''
+
+        // // 隐藏 textarea
+        this.isShow = false
+
+        // 滚动到某个位置
+        this.$refs.box.scrollIntoView()
+      }
+    },
+    // 收藏
+    async star() {
+      let res = await this.$axios.get(`/post_star/${this.$route.params.id}`)
+      if (res.data.statusCode === 200) {
+        // 提示
+        this.$toast.success(res.data.message)
+        // 重新请求数据
+        this.getDetail()
+      }
     }
   }
 }
@@ -308,6 +382,9 @@ video {
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+    .active {
+      color: #f00;
     }
   }
   .textarea {

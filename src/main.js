@@ -98,6 +98,10 @@ axios.interceptors.response.use(res => {
   return res
 })
 
+// 事件总线 ==> bus
+const bus = new Vue()
+Vue.prototype.$bus = bus // 挂载到原型上
+
 new Vue({
   // 挂载路由
   router,

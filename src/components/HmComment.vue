@@ -9,7 +9,7 @@
         <div class="name">{{ comment.user.nickname }}</div>
         <div class="date">{{ comment.create_date }}</div>
       </div>
-      <div class="right">回复</div>
+      <div class="right" @click="reply">回复</div>
     </div>
     <!-- 楼层 -->
     <hm-floor v-if="comment.parent" :parent="comment.parent" :count="getCount(0,comment)"></hm-floor>
@@ -22,12 +22,18 @@
 export default {
   props: ['comment'],
   methods: {
+    // 递归查询parent的个数
     getCount(num, parent) {
       if (parent.parent) {
         return this.getCount(num + 1, parent.parent)
       } else {
         return num
       }
+    },
+    // 点击评论组件的回复
+    reply() {
+      console.log('评论的回复')
+      this.$bus.$emit('reply', this.comment.id, this.comment.user.nickname)
     }
   }
 }

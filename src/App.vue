@@ -1,10 +1,13 @@
 <template>
-  <!-- 出口 -->
-  <router-view></router-view>
+  <!-- 缓存 -->
+  <keep-alive include="home">
+    <!-- 出口 -->
+    <router-view></router-view>
+  </keep-alive>
 </template>
 
 <script>
-export default {};
+export default {}
 </script>
 
 <style>

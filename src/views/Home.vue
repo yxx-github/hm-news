@@ -49,6 +49,7 @@
 
 <script>
 export default {
+  name: 'home',
   data() {
     return {
       active: 1, //tab栏当前激活的索引
