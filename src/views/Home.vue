@@ -81,9 +81,32 @@ export default {
   created() {
     this.getTabsList()
   },
+  activated() {
+    // 被 keep-alive 缓存的组件 激活时调用 , ( 切换显示 )
+    let activeTabs = JSON.parse(localStorage.getItem('activeTabs'))
+    if (activeTabs) {
+      this.tabList = activeTabs
+      this.active = 1 // 回到默认的索引是最合适的
+      this.getPostList(this.tabList[this.active].id)
+      return
+    }
+  },
+  // deactivated() {
+  //   //被 keep-alive 缓存的组件 停用时调用 , ( 切换隐藏 )
+  //   console.log('deactivated')
+  // },
   methods: {
     // 获取栏目列表数据
     async getTabsList() {
+      // 先从本地获取
+      let activeTabs = JSON.parse(localStorage.getItem('activeTabs'))
+      if (activeTabs) {
+        this.tabList = activeTabs
+        this.getPostList(this.tabList[this.active].id)
+        return // 不需要进行后面的请求了
+      }
+
+      // 发送请求
       let res = await this.$axios.get('/category')
       // console.log(res.data.data)
       if (res.data.statusCode === 200) {
