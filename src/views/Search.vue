@@ -2,7 +2,7 @@
   <div>
     <!-- 头部 -->
     <div class="header">
-      <div class="left">
+      <div class="left" @click="$router.back()">
         <i class="iconfont iconjiantou2"></i>
       </div>
       <div class="center">
@@ -20,12 +20,21 @@
 
     <!-- 搜索推荐 -->
     <div class="search_recommend" v-if="recommendList.length > 0">
-      <div v-for="item in recommendList" :key="item.id">{{ item.title }}</div>
+      <div
+        @click="clickHistoryTag(item.title)"
+        v-for="item in recommendList"
+        :key="item.id"
+      >{{ item.title }}</div>
     </div>
 
     <!-- 列表 -->
     <div class="content" v-else-if="postList.length > 0">
-      <hm-post v-for="post in postList" :key="post.id" :post="post"></hm-post>
+      <hm-post
+        @click.native="$router.push(`/detail/${post.id}`)"
+        v-for="post in postList"
+        :key="post.id"
+        :post="post"
+      ></hm-post>
     </div>
 
     <!-- 历史 -->
@@ -78,6 +87,9 @@ export default {
   methods: {
     // 搜索
     async search() {
+      // 把搜索推荐数组清空 因为要展示获取的文章列表
+      this.recommendList = []
+
       console.log('搜索的内容:', this.keyword)
       // 排空，判断输入的搜索的内容是否为空 如果为空 则不需要发送请求
       if (this.keyword.trim() === '') return
